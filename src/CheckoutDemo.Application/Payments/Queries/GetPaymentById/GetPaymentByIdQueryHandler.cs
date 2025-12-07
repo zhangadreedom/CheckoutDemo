@@ -1,0 +1,47 @@
+﻿using CheckoutDemo.Application.Common.Exceptions;
+using CheckoutDemo.Application.Payments.DTOs;
+using CheckoutDemo.Domain.Payments.Entities;
+using MediatR;
+
+namespace CheckoutDemo.Application.Payments.Queries.GetPaymentById
+{
+    public interface IPaymentReadRepository
+    {
+        Task<Payment?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    }
+
+    public sealed class GetPaymentByIdQueryHandler
+        : IRequestHandler<GetPaymentByIdQuery, PaymentDto?>
+    {
+        private readonly IPaymentReadRepository _paymentRepository;
+
+        public GetPaymentByIdQueryHandler(IPaymentReadRepository paymentRepository)
+        {
+            _paymentRepository = paymentRepository;
+        }
+
+        public async Task<PaymentDto?> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(request.Id, cancellationToken);
+
+            if (payment is null)
+            {
+                throw new NotFoundException(nameof(Payment), request.Id);
+            }
+
+            // 这里简单手动映射，后面可以用 Mapster/AutoMapper
+            return new PaymentDto
+            {
+                Id = payment.Id,
+                Reference = payment.Reference,
+                Amount = payment.Amount.Amount,
+                Currency = payment.Amount.Currency.Value,
+                Country = payment.BillingCountry.Value,
+                Status = payment.Status,
+                MethodType = payment.MethodType?.ToString(),
+                CheckoutPaymentId = payment.CheckoutPaymentId,
+                CreatedAtUtc = payment.CreatedAtUtc
+            };
+        }
+    }
+}
