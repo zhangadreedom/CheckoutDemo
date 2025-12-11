@@ -8,7 +8,10 @@ namespace CheckoutDemo.Domain.Payments.ValueObjects
     public sealed class CountryCode : ValueObject
     {
         public string Value { get; }
-
+        private CountryCode()
+        {
+            Value = null!;
+        }
         private CountryCode(string value)
         {
             Value = value.ToUpperInvariant();

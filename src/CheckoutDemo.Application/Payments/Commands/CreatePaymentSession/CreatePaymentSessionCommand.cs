@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CheckoutDemo.Application.Payments.Models;
+using MediatR;
 
 namespace CheckoutDemo.Application.Payments.Commands.CreatePaymentSession
 {

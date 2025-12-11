@@ -1,9 +1,7 @@
 <Solution>
-  <Project Path="CheckoutDemo.csproj" />
-  <Project Path="CheckoutTests/CheckoutTests.csproj" />
-  <Project Path="src/CheckoutDemo.Api/CheckoutDemo.Api.csproj" Id="77a5fbf5-20c8-46f5-9e9a-f5d507c65e5b" />
+  <Project Path="src/CheckoutDemo.Api/CheckoutDemo.Api.csproj" Id="a2ee3a76-e664-4195-9d68-6633612fcc29" />
   <Project Path="src/CheckoutDemo.Application/CheckoutDemo.Application.csproj" Id="5a755058-3492-4141-a134-0137c2518dff" />
-  <Project Path="src/CheckoutDemo.Contracts/CheckoutDemo.Contracts.csproj" Id="ee62a9bf-3064-42ad-a68e-880318afedd6" />
   <Project Path="src/CheckoutDemo.Domain/CheckoutDemo.Domain.csproj" Id="ecf6c562-8261-46a9-98e5-da91f5deadab" />
   <Project Path="src/CheckoutDemo.Infrastructure/CheckoutDemo.Infrastructure.csproj" Id="717524f1-1d44-4473-b739-e63f908ca8a9" />
+  <Project Path="test/CheckoutTests/CheckoutTests.csproj" Id="adc7be95-3a7a-4a5e-98f1-6c5b5208bab0" />
 </Solution>

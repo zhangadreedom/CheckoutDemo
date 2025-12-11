@@ -97,5 +97,42 @@ namespace CheckoutDemo.Infrastructure.Payments
                 Raw = rawObject
             };
         }
+
+        public async Task RefundAsync(
+            string checkoutPaymentId,
+            Money amount,
+            CancellationToken cancellationToken = default)
+        {
+            var client = _httpClientFactory.CreateClient("checkout");
+
+            client.BaseAddress = new Uri(_options.BaseUrl);
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", _options.SecretKey);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var payload = new
+            {
+                amount = amount.Amount,
+                reference = $"refund-{checkoutPaymentId}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}"
+            };
+
+            var json = JsonSerializer.Serialize(payload, JsonOptions);
+            using var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using var response = await client.PostAsync(
+                $"/payments/{checkoutPaymentId}/refunds",
+                content,
+                cancellationToken);
+
+            var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new InvalidOperationException(
+                    $"Checkout refund failed: {(int)response.StatusCode} - {responseBody}");
+            }
+        }
     }
 }

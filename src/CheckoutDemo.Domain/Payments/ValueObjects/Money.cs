@@ -9,6 +9,11 @@ namespace CheckoutDemo.Domain.Payments.ValueObjects
     {
         public long Amount { get; }
         public CurrencyCode Currency { get; }
+        private Money()
+        {
+            Amount = default;
+            Currency = null!;
+        }
 
         private Money(long amount, CurrencyCode currency)
         {

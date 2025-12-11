@@ -1,21 +1,17 @@
 ﻿using CheckoutDemo.Application.Common.Exceptions;
 using CheckoutDemo.Application.Payments.DTOs;
+using CheckoutDemo.Domain.Payments.Abstractions;
 using CheckoutDemo.Domain.Payments.Entities;
 using MediatR;
 
 namespace CheckoutDemo.Application.Payments.Queries.GetPaymentById
 {
-    public interface IPaymentReadRepository
-    {
-        Task<Payment?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    }
-
     public sealed class GetPaymentByIdQueryHandler
         : IRequestHandler<GetPaymentByIdQuery, PaymentDto?>
     {
-        private readonly IPaymentReadRepository _paymentRepository;
+        private readonly IPaymentRepository _paymentRepository;
 
-        public GetPaymentByIdQueryHandler(IPaymentReadRepository paymentRepository)
+        public GetPaymentByIdQueryHandler(IPaymentRepository paymentRepository)
         {
             _paymentRepository = paymentRepository;
         }

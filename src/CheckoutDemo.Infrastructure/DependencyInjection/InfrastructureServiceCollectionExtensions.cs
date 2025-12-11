@@ -2,9 +2,12 @@
 using CheckoutDemo.Application.Common.Options;
 using CheckoutDemo.Domain.Payments.Abstractions;
 using CheckoutDemo.Infrastructure.Payments;
+using CheckoutDemo.Infrastructure.Persistence.EF;
 using CheckoutDemo.Infrastructure.Persistence.InMemory;
 using CheckoutDemo.Infrastructure.Persistence.UnitOfWork;
 using CheckoutDemo.Infrastructure.Time;
+using CheckoutDemo.Infrastructure.Webhooks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,8 +30,20 @@ namespace CheckoutDemo.Infrastructure.DependencyInjection
             services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
             // 仓储 + UoW（InMemory 版本）
-            services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
-            services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
+            //services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
+            //services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
+            var connectionString = configuration.GetConnectionString("CheckoutDemo")
+                                   ?? throw new InvalidOperationException("Connection string 'CheckoutDemo' is not configured.");
+
+            services.AddDbContext<CheckoutDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+
+            // ✅ EF 实现的仓储 & UoW
+            services.AddScoped<IPaymentRepository, EfPaymentRepository>();
+            services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+            services.AddScoped<ICheckoutSignatureValidator, NoOpCheckoutSignatureValidator>();
 
             // 支付网关
             services.AddScoped<ICheckoutPaymentGateway, CheckoutPaymentGateway>();

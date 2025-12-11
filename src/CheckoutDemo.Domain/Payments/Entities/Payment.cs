@@ -47,9 +47,9 @@ namespace CheckoutDemo.Domain.Payments.Entities
             Money amount,
             CountryCode billingCountry,
             PaymentMethodType? methodType,
-            DateTime createdAtUtcUtc)
+            DateTime createdAtUtc)
         {
-            var payment = new Payment(reference, amount, billingCountry, methodType, createdAtUtcUtc);
+            var payment = new Payment(reference, amount, billingCountry, methodType, createdAtUtc);
 
             // 可以在这里添加 “PaymentCreated” 领域事件（如果你需要）
             // payment.AddDomainEvent(new PaymentCreatedDomainEvent(payment.Id, reference));

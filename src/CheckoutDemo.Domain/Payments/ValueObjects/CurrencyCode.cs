@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CheckoutDemo.Domain.Common;
+﻿using CheckoutDemo.Domain.Common;
 
 namespace CheckoutDemo.Domain.Payments.ValueObjects
 {
     public sealed class CurrencyCode : ValueObject
     {
         public string Value { get; }
-
+        private CurrencyCode()
+        {
+            Value = null!;
+        }
         private CurrencyCode(string value)
         {
             Value = value.ToUpperInvariant();
