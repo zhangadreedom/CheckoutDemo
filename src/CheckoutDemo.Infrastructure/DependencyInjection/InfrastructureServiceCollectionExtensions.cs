@@ -19,17 +19,15 @@ namespace CheckoutDemo.Infrastructure.DependencyInjection
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            // 绑定 CheckoutOptions
             services.Configure<CheckoutOptions>(
                 configuration.GetSection(CheckoutOptions.SectionName));
 
             // HttpClient
             services.AddHttpClient("checkout");
 
-            // 时间提供器
             services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
-            // 仓储 + UoW（InMemory 版本）
+            // InMemory
             //services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
             //services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
             var connectionString = configuration.GetConnectionString("CheckoutDemo")
@@ -40,16 +38,11 @@ namespace CheckoutDemo.Infrastructure.DependencyInjection
                 options.UseSqlServer(connectionString);
             });
 
-            // ✅ EF 实现的仓储 & UoW
             services.AddScoped<IPaymentRepository, EfPaymentRepository>();
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
             services.AddScoped<ICheckoutSignatureValidator, NoOpCheckoutSignatureValidator>();
 
-            // 支付网关
             services.AddScoped<ICheckoutPaymentGateway, CheckoutPaymentGateway>();
-
-            // IEventPublisher 暂时可以做一个 no-op 实现（如果还没写），或在 Application 层先不调用
-            // services.AddScoped<IEventPublisher, NoOpEventPublisher>();
 
             return services;
         }

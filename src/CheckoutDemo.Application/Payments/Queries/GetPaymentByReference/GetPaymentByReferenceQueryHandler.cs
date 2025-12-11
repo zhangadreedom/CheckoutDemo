@@ -27,7 +27,6 @@ namespace CheckoutDemo.Application.Payments.Queries.GetPaymentByReference
             if (payment is null)
                 return null;
 
-            // 用你现有的映射方式（和 GetPaymentById 一样）
             return new PaymentDto
             {
                 Id = payment.Id,

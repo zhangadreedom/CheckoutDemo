@@ -50,18 +50,18 @@ namespace CheckoutDemo.Application.Payments.Commands.RefundPayment
                 throw new BusinessRuleViolationException("Cannot refund a payment without CheckoutPaymentId.");
             }
 
-            // 1. 调用 Checkout 执行退款
+          
             await _paymentGateway.RefundAsync(
                 payment.CheckoutPaymentId,
                 payment.Amount,
                 cancellationToken);
 
-            // 2. 更新本地状态
+          
             payment.MarkRefunded();
             _paymentRepository.Update(payment);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            // 3. 返回最新 PaymentDto
+           
             return new PaymentDto
             {
                 Id = payment.Id,

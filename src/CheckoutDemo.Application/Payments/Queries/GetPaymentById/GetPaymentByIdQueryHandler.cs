@@ -25,7 +25,6 @@ namespace CheckoutDemo.Application.Payments.Queries.GetPaymentById
                 throw new NotFoundException(nameof(Payment), request.Id);
             }
 
-            // 这里简单手动映射，后面可以用 Mapster/AutoMapper
             return new PaymentDto
             {
                 Id = payment.Id,

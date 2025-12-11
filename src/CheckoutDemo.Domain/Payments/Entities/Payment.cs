@@ -7,22 +7,19 @@ namespace CheckoutDemo.Domain.Payments.Entities
 {
     public sealed class Payment : AggregateRoot
     {
-        // 业务相关
-        public string Reference { get; private set; } = default!;          // 自己系统的 order / payment reference
+        public string Reference { get; private set; } = default!;          
         public Money Amount { get; private set; } = default!;
         public CountryCode BillingCountry { get; private set; } = default!;
         public PaymentMethodType? MethodType { get; private set; }
         public PaymentStatus Status { get; private set; }
 
-        // 与 Checkout 对接相关的字段
-        public string? CheckoutPaymentId { get; private set; }             // payment id (evt.id / data.id)
-        public string? PaymentSessionId { get; private set; }              // ps_xxx
-        public string? PaymentSessionSecret { get; private set; }          // pss_xxx
+        public string? CheckoutPaymentId { get; private set; }             
+        public string? PaymentSessionId { get; private set; }              
+        public string? PaymentSessionSecret { get; private set; }          
 
         public DateTime CreatedAtUtc { get; private set; }
         public DateTime? UpdatedAtUtc { get; private set; }
 
-        // EF / 序列化需要的无参构造函数
         private Payment()
         {
         }
@@ -50,9 +47,6 @@ namespace CheckoutDemo.Domain.Payments.Entities
             DateTime createdAtUtc)
         {
             var payment = new Payment(reference, amount, billingCountry, methodType, createdAtUtc);
-
-            // 可以在这里添加 “PaymentCreated” 领域事件（如果你需要）
-            // payment.AddDomainEvent(new PaymentCreatedDomainEvent(payment.Id, reference));
 
             return payment;
         }

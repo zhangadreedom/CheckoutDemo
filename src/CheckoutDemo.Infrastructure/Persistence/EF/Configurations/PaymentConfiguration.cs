@@ -19,7 +19,6 @@ namespace CheckoutDemo.Infrastructure.Persistence.EF.Configurations
                 .IsRequired()
                 .HasMaxLength(200);
 
-            // Money 映射：Amount（long）+ CurrencyCode.Value
             builder.OwnsOne(x => x.Amount, money =>
             {
                 money.Property(m => m.Amount)

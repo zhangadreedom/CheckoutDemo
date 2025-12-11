@@ -44,7 +44,6 @@ namespace CheckoutDemo.Infrastructure.Payments
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // 按 Checkout Payment Sessions API 构建 payload（简化版）
             var payload = new
             {
                 amount = amount.Amount,
@@ -58,8 +57,6 @@ namespace CheckoutDemo.Infrastructure.Payments
                         country
                     }
                 },
-                // 支付完成/失败后前端会跳转的地址（demo 用）
-                // 实际项目你可以从调用方传入
                 success_url = "http://localhost:5173/success",
                 failure_url = "http://localhost:5173/failure"
             };
@@ -72,7 +69,6 @@ namespace CheckoutDemo.Infrastructure.Payments
 
             if (!response.IsSuccessStatusCode)
             {
-                // 这里简单抛异常，真实项目中可以有更丰富的错误模型
                 throw new InvalidOperationException(
                     $"Checkout payment-sessions failed: {(int)response.StatusCode} - {responseBody}");
             }
@@ -86,7 +82,6 @@ namespace CheckoutDemo.Infrastructure.Payments
             var secret = root.GetProperty("payment_session_secret").GetString()
                         ?? throw new InvalidOperationException("payment_session_secret missing in response.");
 
-            // 直接把整个 JSON 反序列化成 object，交给前端 Flow 用
             var rawObject = JsonSerializer.Deserialize<object>(responseBody, JsonOptions)
                             ?? throw new InvalidOperationException("Failed to deserialize payment session response.");
 

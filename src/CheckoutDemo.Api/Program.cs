@@ -55,11 +55,9 @@ namespace CheckoutDemo.Api
 
             app.MapGet("/", () => "Checkout Demo API is running.");
 
-            // ✅ 核心 Endpoint：创建 Payment Session
             app.MapPost("/api/payment-sessions",
                 async (CreatePaymentSessionRequest request, IMediator mediator, CancellationToken ct) =>
                 {
-                    // 1. 把 HTTP Request 转成 Application 层的 Command
                     var command = new CreatePaymentSessionCommand
                     {
                         Amount = request.Amount,
@@ -69,10 +67,7 @@ namespace CheckoutDemo.Api
                         PreferredMethod = request.PreferredMethod
                     };
 
-                    // 2. 交给 MediatR，让 Application 层处理
                     var result = await mediator.Send(command, ct);
-
-                    // 3. 映射成 HTTP Response DTO
 
                     return Results.Ok(new
                     {
@@ -107,13 +102,11 @@ namespace CheckoutDemo.Api
             app.MapPost("/webhooks/checkout",
                 async (HttpRequest httpRequest, IMediator mediator, CancellationToken ct) =>
                 {
-                    // 读取原始 Body
                     httpRequest.EnableBuffering();
                     using var reader = new StreamReader(httpRequest.Body, leaveOpen: true);
                     var body = await reader.ReadToEndAsync();
                     httpRequest.Body.Position = 0;
 
-                    // 收集 Headers
                     var headers = httpRequest.Headers
                         .ToDictionary(h => h.Key, h => h.Value.ToString(), StringComparer.OrdinalIgnoreCase);
 
@@ -125,7 +118,6 @@ namespace CheckoutDemo.Api
 
                     await mediator.Send(command, ct);
 
-                    // 按惯例返回 200，表示 webhook 已处理（即使我们内部忽略了某些事件）
                     return Results.Ok();
                 });
 

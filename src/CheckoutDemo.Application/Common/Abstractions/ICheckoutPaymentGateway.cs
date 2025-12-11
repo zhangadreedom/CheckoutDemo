@@ -12,7 +12,6 @@ namespace CheckoutDemo.Application.Common.Abstractions
             string country,
             CancellationToken cancellationToken = default);
 
-        // 预留：后续可以加 Capture / Refund / VerifyWebhookSignature 等方法
         Task RefundAsync(
             string checkoutPaymentId,
             Money amount,
